@@ -9,8 +9,8 @@ import { LogOut, User2 } from "lucide-react";
 const Navbar = () => {
   const user = false;
   return (
-    <div className="bg-white">
-      <div className="flex items-center justify-between mx-auto max-w-7xl h-16 p-1 sm:p-2 md:p-4 lg:mx-auto">
+    <div className="bg-white ">
+      <div className="flex items-center justify-between mx-auto max-w-7xl h-16 p-1 sm:p-2 md:p-4 lg:mx-auto flex-col sm:flex-row">
         <div className="">
           <h1 className="text-2xl font-bold">
             Job<span className="text-[#F83002]">Portal</span>
@@ -18,9 +18,9 @@ const Navbar = () => {
         </div>
         <div className="flex items-center gap-12">
           <ul className="flex font-medium items-center gap-5">
-            <li>Home</li>
-            <li>Jobs</li>
-            <li>Browse</li>
+            <li><Link to={'/'} className="cursor-pointer">Home</Link></li>
+            <li><Link to={'/jobs'} className="cursor-pointer">Jobs</Link></li>
+            <li><Link to={'/browse'} className="cursor-pointer">Browse</Link></li>
           </ul>
           {
             !user ? (
