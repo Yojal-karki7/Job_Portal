@@ -43,7 +43,7 @@ const Login = () => {
       }
     } catch (error) {
       console.log(error)
-      toast.error(error.res.data.message)
+      toast.error(error.response.data.message)
     } finally {
       dispatch(setLoading(false))
     }
@@ -106,7 +106,7 @@ const Login = () => {
             <Button type="submit" className="w-full my-4">Log in</Button>
           )
           }
-          <span className="text-sm">Don't have an account? <Link to={'/signup'} className="text-blue-600 hover:underline">Login</Link></span>
+          <span className="text-sm">Don't have an account? <Link to={'/signup'} className="text-blue-600 hover:underline">Signup</Link></span>
         </form>
       </div>
     </div>

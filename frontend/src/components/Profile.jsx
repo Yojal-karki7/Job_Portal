@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "./shared/Navbar";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
@@ -6,11 +6,15 @@ import { Contact, Mail, Pen } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Label } from "./ui/label";
 import AppliedJobTable from "./shared/AppliedJobTable";
+import UpdateProfileDialog from "./shared/UpdateProfileDialog";
+import { useSelector } from "react-redux";
 
 const skills = ["HTML", "CSS", "JS", "REACT JS"];
 
+const resume = true;
 const Profile = () => {
-  const resume = true;
+  const [open, setOpen] = useState(false);
+  const {user} = useSelector(store => store.auth);
   return (
     <div>
       <Navbar />
@@ -18,35 +22,36 @@ const Profile = () => {
         <div className="flex justify-between">
           <div className="flex items-center gap-4">
             <Avatar className="h-24 w-24">
-              <AvatarImage src="https://imgs.search.brave.com/dyHh5Cln-rDs8nRbzC50NGPTYBkgBHsFJWjerXs5BiM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/bG9nb2pveS5jb20v/d3AtY29udGVudC91/cGxvYWRzLzIwMTgv/MDUvMDExMDQ3MzMv/NTEwMy03Njh4NTkx/LnBuZw" />
+              <AvatarImage src={user?.profile?.profilePhoto || 'https://imgs.search.brave.com/RCee6HUBeX3xWQX3_76YnN-q-h6oRKTEbe4aBxvUcCE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS12ZWN0/b3IvYXZhdGFyLXBy/b2ZpbGUtcGljdHVy/ZS1pY29uLWJsdWUt/YmFja2dyb3VuZC1m/bGF0LWRlc2lnbi1z/dHlsZS1yZXNvdXJj/ZXMtZ3JhcGhpYy1l/bGVtZW50LWRlc2ln/bl85OTE3MjAtNjUz/LmpwZz9zZW10PWFp/c19oeWJyaWQ'} className="object-cover" />
             </Avatar>
             <div className="">
-              <h1 className="font-medium text-xl">FullName</h1>
+              <h1 className="font-medium text-xl">{user?.fullname ? user?.fullname: <span>Please Log in</span>}</h1>
               <p>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Voluptas, ex quae eos itaque doloremque quo?
+                {
+                  user?.profile?.bio
+                }
               </p>
             </div>
           </div>
-          <Button className="" variant="outline">
+          <Button className="" variant="outline" onClick={()=> setOpen(true)}>
             <Pen />
           </Button>
         </div>
         <div className="">
           <div className="flex items-center gap-3 my-2">
             <Mail />
-            <span>johndoe@gmail.com</span>
+            <span>{user?.email}</span>
           </div>
           <div className="flex items-center gap-3 my-2">
             <Contact />
-            <span>9347247232</span>
+            <span>{user?.phoneNumber}</span>
           </div>
         </div>
         <div className="my-5">
           <h1>Skills</h1>
           <div className="flex items-center gap-1">
-            {skills.length !== 0 ? (
-              skills.map((item, index) => <Badge key={index}>{item}</Badge>)
+            {user?.profile?.skills.length !== 0 ? (
+              user?.profile?.skills.map((item, index) => <Badge key={index}>{item}</Badge>)
             ) : (
               <span>N/A</span>
             )}
@@ -55,8 +60,8 @@ const Profile = () => {
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label className="text-md font-bold">Resume</Label>
           {resume ? (
-            <a target="_blank" href="https://www.facebook.com/yojalkarki7" className="text-blue-500 w-full hover:underline cursor-pointer">
-              Yojal Karki
+            <a target="_blank" href={user?.profile?.resume} className="text-blue-500 w-full hover:underline cursor-pointer">
+            {user?.profile?.resumeOriginalName}
             </a>
           ) : (
             <span>N/A</span>
@@ -68,6 +73,7 @@ const Profile = () => {
           {/* Applied Job Table */}
           <AppliedJobTable />
         </div>
+        <UpdateProfileDialog open={open} setOpen={setOpen}/>
     </div>
   );
 };

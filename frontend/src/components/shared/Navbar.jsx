@@ -1,14 +1,34 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Popover } from "../ui/popover";
 import { PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
 import { Button } from "../ui/button";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { LogOut, User2 } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
+import axios from "axios";
+import { USER_API_END_POINT } from "@/utils/constant";
+import { setUser } from "@/redux/slices/authSlice";
 
 const Navbar = () => {
-  const { user } = useSelector(store => store.auth)
+  const { user } = useSelector(store => store.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+
+  const handleLogout = async() => {
+    try {
+      const res = await axios.get(`${USER_API_END_POINT}/logout`, {withCredentials: true});
+      if(res.data.success) {
+        dispatch(setUser(null))
+        navigate('/login');
+        toast.success(res.data.message)
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message)
+    }
+  }
   return (
     <div className="bg-white ">
       <div className="flex items-center justify-between mx-auto max-w-7xl h-16 p-1 sm:p-2 md:p-4 lg:mx-auto flex-col sm:flex-row">
@@ -34,8 +54,9 @@ const Navbar = () => {
             <PopoverTrigger asChild>
               <Avatar className="cursor-pointer">
                 <AvatarImage
-                  src="https://github.com/shadcn.png"
+                  src={user?.profile?.profilePhoto || 'https://imgs.search.brave.com/RCee6HUBeX3xWQX3_76YnN-q-h6oRKTEbe4aBxvUcCE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS12ZWN0/b3IvYXZhdGFyLXBy/b2ZpbGUtcGljdHVy/ZS1pY29uLWJsdWUt/YmFja2dyb3VuZC1m/bGF0LWRlc2lnbi1z/dHlsZS1yZXNvdXJj/ZXMtZ3JhcGhpYy1l/bGVtZW50LWRlc2ln/bl85OTE3MjAtNjUz/LmpwZz9zZW10PWFp/c19oeWJyaWQ'}
                   alt="@shadcn"
+                  className="object-cover"
                 />
               </Avatar>
             </PopoverTrigger>
@@ -44,12 +65,13 @@ const Navbar = () => {
                 <div className="flex gap-4 space-y-2">
                   <Avatar>
                     <AvatarImage
-                      src="https://github.com/shadcn.png"
+                      src={user?.profile?.profilePhoto || 'https://imgs.search.brave.com/RCee6HUBeX3xWQX3_76YnN-q-h6oRKTEbe4aBxvUcCE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS12ZWN0/b3IvYXZhdGFyLXBy/b2ZpbGUtcGljdHVy/ZS1pY29uLWJsdWUt/YmFja2dyb3VuZC1m/bGF0LWRlc2lnbi1z/dHlsZS1yZXNvdXJj/ZXMtZ3JhcGhpYy1l/bGVtZW50LWRlc2ln/bl85OTE3MjAtNjUz/LmpwZz9zZW10PWFp/c19oeWJyaWQ'}
                       alt="@shadcn"
+                      className="object-cover"
                     />
                   </Avatar>
                   <div className="">
-                    <h4 className="font-medium">Yojal Karki</h4>
+                    <h4 className="font-medium">{user?.fullname}</h4>
                     <p className="text-sm text-muted-foreground ">
                       Lorem ipsum dolor sit amet consectetur.
                     </p>
@@ -62,7 +84,7 @@ const Navbar = () => {
                   </div>
                   <div className="flex w-fit items-center gap-2 cursor-pointer">
                     <LogOut/>
-                    <Button variant="link">Logout</Button>
+                    <Button onClick={handleLogout} variant="link">Logout</Button>
                   </div>
                 </div>
               </div>
