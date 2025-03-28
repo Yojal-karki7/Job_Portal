@@ -1,4 +1,6 @@
 import { Company } from "../models/companySchema.js";
+import cloudinary from "../utils/cloudinary.js";
+import getDataUri from "../utils/dataUri.js";
 
 export const registerCompany = async (req, res) => {
   try {
@@ -9,21 +11,21 @@ export const registerCompany = async (req, res) => {
         success: false,
       });
     }
-    let comapny = await Company.findOne({ name: companyName });
-    if (comapny) {
+    let company = await Company.findOne({ name: companyName });
+    if (company) {
       return res.status(400).json({
         message: "Company already exists!",
         success: false,
       });
     }
-    comapny = await Company.create({
+    company = await Company.create({
       name: companyName,
       userId: req.id,
     });
     return res.status(201).json({
       message: "Company registered successfully!",
       success: true,
-      comapny,
+      company,
     });
   } catch (error) {
     console.log(error);
@@ -75,17 +77,21 @@ export const getCompanyById = async (req, res) => {
 export const updateComapny = async (req, res) => {
   try {
     const { name, description, website, location } = req.body;
-    console.log(name);
-    
     const file = req.file;
 
     // cloudinary
+
+    const fileUri = getDataUri(file);
+    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+    const logo = cloudResponse.secure_url;
+    
 
     const updateData = {
       name,
       description,
       website,
       location,
+      logo
     };
     const company = await Company.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
