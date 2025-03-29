@@ -9,8 +9,11 @@ import { COMPANY_API_END_POINT } from "@/utils/constant";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
+import useGetCompanyById from "@/hooks/useGetCompanyById";
 
 const CompanySetup = () => {
+  const params = useParams();
+  useGetCompanyById(params.id);
   const [input, setInput] = useState({
     name: "",
     description: "",
@@ -19,8 +22,6 @@ const CompanySetup = () => {
     file: null,
   });
   const { singleCompany } = useSelector((store) => store.company);
-  const params = useParams();
-  const companyId = params.id;
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -87,6 +88,7 @@ const CompanySetup = () => {
               type="button"
               variant="outline"
               className="flex items-center gap-2 text-gray-500 font-semibold"
+              onClick={()=>navigate('/admin/companies')}
             >
               <ArrowLeft />
               <span>Back</span>
