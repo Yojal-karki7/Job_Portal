@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authSlice from "../redux/slices/authSlice";
 import jobSlice from "../redux/slices/jobSlice"
 import companySlice from "../redux/slices/companySlice"
+import applicationSlice from "../redux/slices/applicationSlice"
 import {
   persistReducer,
   FLUSH,
@@ -22,7 +23,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
     auth: authSlice,
     job:jobSlice,
-    company: companySlice
+    company: companySlice,
+    application: applicationSlice,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
