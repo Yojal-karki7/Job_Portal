@@ -65,7 +65,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
     <div>
       <Dialog open={open}>
       <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
+        {/* <Button variant="outline">Edit Profile</Button> */}
       </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]" onInteractOutside={()=>setOpen(false)}>
           <DialogHeader>
